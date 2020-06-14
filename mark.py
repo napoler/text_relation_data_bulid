@@ -98,15 +98,23 @@ def mark_one(keyword,label_spread):
                 # print("句子：",new_text_list[i])
                 
                 try:
-                    print("\n\n预测结果（默认）:",p,c_list[str(p)])
+                    print("\n\n预测结果:",p,c_list[str(p)])
                     # print("预测结果:",p,c_list[int(p)])
                 except:
                     pass
         except:
             pass
         if tc_:
-            print("Bert预测：",tc.pre(keyword,it))
-        c = input("输入对应标签(新建输入n):")
+            p=tc.pre(keyword,it)
+            print("Bert预测：",p)
+        print("Ai推荐（默认）：",p)
+        #只判断预测为1数据
+        # if p==0:
+        #     print("跳过！")
+        #     continue
+
+        c = input("\n输入对应标签(新建输入n):")
+        # 新建标签操作
         if c=="n":
                 n= input("输入新建标签:")
                 c_list[len(c_list)]=n
@@ -115,13 +123,22 @@ def mark_one(keyword,label_spread):
                 print(one)
                 mjson.save([one]) 
         else:
+            # 保存输入的数据
             try:
 
                 if c_list.get(str(c)):
+                    print("输入结果：")
                     one={"label":int(c),'sentence':keyword+" [SEP] "+it,'sentence1':keyword,'sentence2':it}
                     print(one)
                     mjson.save([one])
-
+                elif c_list.get(str(p)):
+                    print("采用预测结果：")
+                    one={"label":int(p),'sentence':keyword+" [SEP] "+it,'sentence1':keyword,'sentence2':it}
+                    print(one)
+                    mjson.save([one])
+                else:
+                    print("跳过保存！")
+                    pass
             except:
                 pass
 
