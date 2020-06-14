@@ -2,6 +2,9 @@
 import  hashlib
 import csv
 import tkitFile
+import string
+
+
 """
 保存数据MRPC格式
 
@@ -33,8 +36,10 @@ mjson=tkitFile.Json("data/marked.json")
 data=mjson.load()
 # with open(file_neme, "r") as f:
 data=[]
+exclude = string.punctuation
 for it in  mjson.auto_load():
-    one=[it['label'],md5(it['sentence1']),md5(it['sentence2']),it['sentence1'],it['sentence2']]
+    # str.replace('\t', ' ').replace('\n', ' ').split(' ')
+    one=[it['label'],md5(it['sentence1']),md5(it['sentence2']),it['sentence1'].replace('\t', ' ').replace('\n', ' ').translate( string.punctuation),it['sentence2'].replace('\t', ' ').replace('\n', ' ').translate( string.punctuation)]
     data.append(one)
 
 # 这里保存数据MRPC格式

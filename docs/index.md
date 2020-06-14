@@ -30,6 +30,15 @@ $ python data2MRPC.py
 
 index_sent.py中有索引demo
 
+
+
+## 数据
+个人用小部分数据开源
+https://www.kaggle.com/terrychanorg/text-relation-data-2mrpc/
+
+## Bert模型
+数据标记不是很大，自己可以训练后使用
+https://www.kaggle.com/terrychanorg/transformerstextrelationmodel
 ## 联系我
 
 如果您有任何意见都可以随时联系我
