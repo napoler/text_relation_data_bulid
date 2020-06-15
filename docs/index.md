@@ -39,6 +39,10 @@ https://www.kaggle.com/terrychanorg/text-relation-data-2mrpc/
 ## Bert模型
 数据标记不是很大，自己可以训练后使用
 https://www.kaggle.com/terrychanorg/transformerstextrelationmodel
+
+训练过程
+
+https://www.kaggle.com/terrychanorg/transformers-text-relation/
 ## 联系我
 
 如果您有任何意见都可以随时联系我
