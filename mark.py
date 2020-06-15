@@ -36,7 +36,7 @@ def run():
     tt=tkitText.Text()
     text_list=[]
     n=0
-    for i,one_it in enumerate(DB.entity_kg_rank.aggregate([{ '$sample': { 'size': 10000 }}  ]) ):
+    for i,one_it in enumerate(DB.entity_kg_rank.aggregate([{ '$sample': { 'size': 50000 }}  ]) ):
         # print(one_it)
         if one_it['rank']>3:
             
@@ -57,32 +57,43 @@ def run():
             except:
                 pass
             keyword=one_it['entity']+" "+one_it['value']
+            c_keyword="\033[91m"+one_it['entity']+"\033[00m"+one_it['value']
             try:
-                mark_one(keyword,label_spread)
+                mark_one(keyword,c_keyword,label_spread)
             except :
                 pass
             n=n+1
         
-def mark_one(keyword,label_spread):
+def mark_one(keyword,c_keyword,label_spread):
     tkitFile.File().mkdir("data")
     mjson=tkitFile.Json("data/marked.json")
     # print(text_list)
     c_list=read_labels()
     data=[]
-    klist=run_search_sent(keyword,tokenizer,model,3)
+    # klist=run_search_sent(keyword,tokenizer,model,3)
+    klist=search_sent_plus(keyword)
     text_list=[]
-    for k in klist.keys():
-        text_list=text_list+klist[k]
+    for k in klist:
+        # text_list=text_list+klist[k]
+        myit =k.meta.to_dict()
+        # print("it",it)
+        # print(k)
+        # exit()
+
+        
+        highlight=myit['highlight']['content'][0].replace("<em>","\033[32m").replace("</em>","\033[00m")
+        text_list.append({"content":k.content,"highlight":highlight})
 
 
-
+    # print("text_list",text_list)
     for it in  text_list[:2]:
         print("##"*29)
         pprint.pprint(c_list)
-        print("句子A：",keyword)
-        print("句子B：",it)
+        print("句子A：",c_keyword)
+        print("句子B：",it['highlight'])
+        # print("句子B：",it['content'])
 
-        new_text_list=[it]
+        new_text_list=[it['content']]
 
         # print(new_text_list,marked_text,marked_label)
         # exit()
@@ -105,9 +116,9 @@ def mark_one(keyword,label_spread):
         except:
             pass
         if tc_:
-            p=tc.pre(keyword,it)
+            p=tc.pre(keyword,it['content'])
             print("Bert预测：",p)
-        print("Ai推荐（默认）：",p)
+        print("Ai推荐（默认）：\033[31m",p,"\033[00m")
         #只判断预测为1数据
         # if p==0:
         #     print("跳过！")
@@ -119,7 +130,7 @@ def mark_one(keyword,label_spread):
                 n= input("输入新建标签:")
                 c_list[len(c_list)]=n
                 save_labels(c_list)
-                one={"label":len(c_list)-1,'sentence':keyword+" [SEP] "+it,'sentence1':keyword,'sentence2':it}
+                one={"label":len(c_list)-1,'sentence':keyword+" [SEP] "+it['content'],'sentence1':keyword,'sentence2':it['content']}
                 print(one)
                 mjson.save([one]) 
         else:
@@ -128,12 +139,12 @@ def mark_one(keyword,label_spread):
 
                 if c_list.get(str(c)):
                     print("输入结果：")
-                    one={"label":int(c),'sentence':keyword+" [SEP] "+it,'sentence1':keyword,'sentence2':it}
+                    one={"label":int(c),'sentence':keyword+" [SEP] "+it['content'],'sentence1':keyword,'sentence2':it['content']}
                     print(one)
                     mjson.save([one])
                 elif c_list.get(str(p)):
                     print("采用预测结果：")
-                    one={"label":int(p),'sentence':keyword+" [SEP] "+it,'sentence1':keyword,'sentence2':it}
+                    one={"label":int(p),'sentence':keyword+" [SEP] "+it['content'],'sentence1':keyword,'sentence2':it['content']}
                     print(one)
                     mjson.save([one])
                 else:
