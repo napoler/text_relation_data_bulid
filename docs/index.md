@@ -9,6 +9,10 @@ layout: default
 
 # 关于text_relation_data_bulid
 MRPC格式数据标记助手
+MRPC(Microsoft Research Paraphrase Corpus)，由微软发布，判断两个给定句子，是否具有相同的语义，属于句子对的文本二分类任务。
+https://www.microsoft.com/en-us/download/details.aspx?id=52398
+
+![效果](https://raw.githubusercontent.com/napoler/text_relation_data_bulid/master/assets/_2020-06-15_19-10-53.png "效果")
 
 ## 运行
 
@@ -43,6 +47,7 @@ https://www.kaggle.com/terrychanorg/transformerstextrelationmodel
 训练过程
 
 https://www.kaggle.com/terrychanorg/transformers-text-relation/
+
 ## 联系我
 
 如果您有任何意见都可以随时联系我
