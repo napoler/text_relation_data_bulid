@@ -6,6 +6,16 @@ import pymongo
 # warnings.filterwarnings("ignore", category = ConvergenceWarning)
 import tkitTextClassification as tkitclass
 import tqdm
+from tkitMarker_bert import Marker
+Pred_Marker=Marker(model_path="./model/miaoshu/")
+# pmodel,ptokenizer=Pred_Marker.load_model()
+Pred_Marker.load_model()
+
+
+
+
+
+
 """
 用于构建训练数据
 """
@@ -44,7 +54,7 @@ def add_kg_auto_marked(data):
             print(data)
             print("添加语料成功！")
         except :
-            # print("已经存在")
+            print("已经存在")
             pass
 def set_var(key,value):
     """
@@ -116,6 +126,12 @@ print(DB.name)
 def autorun():
     task=get_var("auto_marked_task")
     for it in get_all(task,rank=5):
+        if DB.entity_kg_ner.find_one({"_id":it['entity'],"check":'5252sp'}):
+            pass
+        else:
+            continue
+        
+        
         kw=it['entity']+it['value']
         for item in search_sent_plus(kw):
                 # print(item)
@@ -136,6 +152,22 @@ def autorun():
                     }
                     # print(marked_data)
                     add_kg_auto_marked(marked_data)
+
+
+                    #进行启发式预测
+                    print("Bert标记的知识：")
+                    one=Pred_Marker.pre(it['entity'],item['content'])
+                    print(one)
+                    for kg in list(set(one)):
+                        print(it['entity'],kg)
+                        # 保存筛选好的数据来作为训练数据
+                        marked_data={
+                            'entity':it['entity'],
+                            'description':kg,
+                            'sentence':item['content']
+                        }
+                        # print(marked_data)
+                        add_kg_auto_marked(marked_data)
         set_task(it['_id'],task)
     set_var("auto_marked_task",task+1)
 
